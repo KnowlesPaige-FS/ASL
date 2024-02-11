@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  greetings:
+    build:
+      context: .
+      dockerfile: dockerfile
+    volumes: 
+      - .src:/var/www/html
+    ports:
+      - "8080:80"
+    command: ["php", "greetings.php"]

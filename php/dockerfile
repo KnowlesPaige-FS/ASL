@@ -1,0 +1,11 @@
+FROM php:7.4-apache
+
+WORKDIR /app 
+
+COPY ./src /var/www/html
+
+COPY greetings.php .
+
+EXPOSE 80
+
+CMD ["php", "greetings.php"]
