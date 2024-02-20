@@ -16,9 +16,6 @@ const getContacts = (req, res) => {
     const pageLimit = limit ? limit : size;
 
     try{
-      if(!schemaFields.includes(by)) {
-        throw new InvalidContactSchemaError(`${by} is not a valid field to filter by.`);
-      }
       if(pageLimit > 20){
         throw new PagerLimitExceededError("Page limit cannot exceed 20.");
       }
