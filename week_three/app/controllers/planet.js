@@ -1,7 +1,10 @@
+const {Planet} = require('../models/index');
+
 // Show all resources
-const index = (req, res) => {
+const index = async (req, res) => {
   // Respond with an array and 2xx status code
-  res.status(200).json([`Planet#index`])
+  const planets = await Planet.findAll()
+  res.status(200).json(planets)
 }
 
 // Show resource
