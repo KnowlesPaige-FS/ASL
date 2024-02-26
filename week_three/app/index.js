@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 app.use(`/planets`,  routers.planet);
 app.use(`/stars`,    routers.star);
 app.use(`/galaxies`, routers.galaxy);
+app.use(`/starsplanets`, routers.starsplanets);
 
 // Set our app to listen on port 3000
 const PORT = process.env.PORT || 3000

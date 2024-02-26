@@ -21,8 +21,8 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const {id} = req.params
-  const {name, size, description, galaxyId, planetId} = req.body
-  const star = await Star.update({name, size, description, galaxyId, planetId}, {
+  const {name, size, description, galaxyId, PlanetId} = req.body
+  const star = await Star.update({name, size, description, galaxyId, PlanetId}, {
     where: {id}
   })
   res.status(200).json(star)

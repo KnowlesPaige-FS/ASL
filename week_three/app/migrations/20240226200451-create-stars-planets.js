@@ -9,19 +9,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      starId: {
-        type: Sequelize.INTEGER, 
-        references: {
-          model: 'Stars',
-          key: 'id'
-        },
-      },
-      planetId: {
+      StarId: {
         type: Sequelize.INTEGER,
+        allowNull: true,
         references: {
-          model: 'Planets',
+          model: 'Stars', 
           key: 'id'
-        },
+        }
+      },
+      PlanetId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Planets', 
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,

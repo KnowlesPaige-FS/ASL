@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Stars', {
+    await queryInterface.createTable('Galaxies', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,11 +18,13 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      planetId: {
-        type: Sequelize.INTEGER
-      },
-      galaxyId: {
-        type: Sequelize.INTEGER
+      StarId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Stars', 
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Stars');
+    await queryInterface.dropTable('Galaxies');
   }
 };
