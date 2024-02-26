@@ -44,4 +44,4 @@ const remove = async (req, res) => {
   }
 }
 // Export all controller actions
-module.exports = {index, show, create, update, remove}
+module.exports = {index, show, create, update, remove }
