@@ -13,7 +13,7 @@ module.exports = {
       {
         name: 'Mercury',
         size: 4880,
-        description: 'The innermost planet of the solar system, known for its extreme temperature variations due to its proximity to the sun.',
+        description: 'The innermost planet of the solar system, known for its extreme temperature variations due to its proximity to the sun.', 
         createdAt, updatedAt
      },
      {

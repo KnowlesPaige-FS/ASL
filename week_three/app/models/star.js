@@ -11,12 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Star.belongsTo(models.Galaxy);
+      Star.belongsToMany(models.Planet, {through: 'StarsPlanets'});
     }
   }
   Star.init({
     name: DataTypes.STRING,
     size: DataTypes.INTEGER,
-    description: DataTypes.STRING
+    description: DataTypes.TEXT,
+    planetId: DataTypes.INTEGER,
+    galaxyId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Star',

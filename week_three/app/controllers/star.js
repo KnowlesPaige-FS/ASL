@@ -1,35 +1,47 @@
-const {Star} = require('../models/index');
+const {Star, Galaxy, Planet} = require('../models/index')
 
-// Show all resources
 const index = async (req, res) => {
-  // Respond with an array and 2xx status code
-  const star = await Star.findAll()
+  const stars = await Star.findAll({
+    include: [Galaxy, Planet]
+  })
+  res.status(200).json(stars)
+}
+
+const show = async (req, res) => {
+  const star = await Star.findByPk(req.params.id)
   res.status(200).json(star)
 }
 
-// Show resource
-const show = (req, res) => {
-  // Respond with a single object and 2xx code
-  res.status(200).json(`Star#show(:id)`)
+const create = async (req, res) => {
+  console.log('star', req.body)
+  const {name, size, description} = req.body
+  const star = await Star.create({name, size, description})
+  res.status(200).json(star)
 }
 
-// Create a new resource
-const create = (req, res) => {
-  // Issue a redirect with a success 2xx code
-  res.redirect(`/stars`, 201)
+const update = async (req, res) => {
+  const {id} = req.params
+  const {name, size, description, galaxyId, planetId} = req.body
+  const star = await Star.update({name, size, description, galaxyId, planetId}, {
+    where: {id}
+  })
+  res.status(200).json(star)
 }
 
-// Update an existing resource
-const update = (req, res) => {
-  // Respond with a single resource and 2xx code
-  res.status(200).json(`/stars/${req.params.id}`, )
+const remove = async (req, res) => {
+  const {id} = req.params
+  await Star.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+  
+  try {
+    const remove = await Star.destroy({where: {id}});
+    res.status(200).json({remove});
+  } 
+  catch(error) {
+    res.status(500).json({error: 'Internal Server Error'});
+  } 
+  finally {
+    await Galaxy.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+  }
 }
-
-// Remove a single resource
-const remove = (req, res) => {
-  // Respond with a 2xx status code and bool
-  res.status(204).json(true)
-}
-
 // Export all controller actions
-module.exports = { index, show, create, update, remove }
+module.exports = {index, show, create, update, remove}
