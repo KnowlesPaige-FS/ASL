@@ -4,8 +4,8 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class StarsPlanets extends Model {
     static associate(models) {
-      StarsPlanets.belongsTo(models.Star,  { foreignKey: 'starId' });
-      StarsPlanets.belongsTo(models.Planet,  { foreignKey: 'planetId' });
+      StarsPlanets.belongsTo(models.Star);
+      StarsPlanets.belongsTo(models.Planet);
     }
   }
   StarsPlanets.init({

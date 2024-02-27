@@ -1,47 +1,72 @@
-const {Galaxy, Star} = require('../models/index');
-// Show all resources
+const { Galaxy, Star } = require('../models/index');
+
 const index = async (req, res) => {
-  const galaxies = await Galaxy.findAll({
-    include: [Star]
-  })
-  res.status(200).json(galaxies)
-}
+  try {
+    const galaxies = await Galaxy.findAll({
+      include: [
+        { model: Star }
+      ]
+    });
+    res.status(200).json(galaxies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const show = async (req, res) => {
-  const galaxy = await Galaxy.findByPk(req.params.id)
-  res.status(200).json(galaxy)
-}
+  const { id } = req.params;
+  try {
+    const galaxy = await Galaxy.findByPk(id, {
+      include: [
+        { model: Star }
+      ]
+    });
+    if (!galaxy) {
+      return res.status(404).json({ error: 'Galaxy not found' });
+    }
+    res.status(200).json(galaxy);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const create = async (req, res) => {
-  console.log("galaxy", req.body)
-  const {name, size, description} = req.body
-  const galaxy = await Galaxy.create({name, size, description})
-
-  res.status(200).json(galaxy)
-}
+  try {
+    const { name, size, description } = req.body;
+    const galaxy = await Galaxy.create({ name, size, description });
+    res.status(200).json(galaxy);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const update = async (req, res) => {
-  const { name, size, description, StarId } = req.body
-  const {id} = req.params
-  const galaxy = await Galaxy.update({name, size, description, StarId}, {
-    where: {id}
-  })
-  res.status(200).json(galaxy)
-}
+  const { id } = req.params;
+  try {
+    const { name, size, description } = req.body;
+    const updatedGalaxy = await Galaxy.update({ name, size, description }, { where: { id } });
+    res.status(200).json(updatedGalaxy);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 const remove = async (req, res) => {
-  const { id } = req.params
-  await Galaxy.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-  
+  const { id } = req.params;
   try {
-    const remove = await Galaxy.destroy({where: {id}});
-    res.status(200).json({remove});
+    const removedGalaxyCount = await Galaxy.destroy({ where: { id } });
+    if (removedGalaxyCount === 0) {
+      return res.status(404).json({ error: 'Galaxy not found' });
+    }
+    res.status(200).json({ success: true });
   } catch (error) {
-    res.status(500).json({error: 'Internal Server Error'});
-  } finally {
-    await Galaxy.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
-// Export all controller actions
-module.exports = {index, show, create, update, remove}
+module.exports = { index, show, create, update, remove };
