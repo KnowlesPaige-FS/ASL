@@ -34,8 +34,8 @@ const show = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { name, size, description } = req.body;
-    const galaxy = await Galaxy.create({ name, size, description });
+    const { name, size, description} = req.body;
+    const galaxy = await Galaxy.create({ name, size, description});
     res.status(200).json(galaxy);
   } catch (error) {
     console.error(error);
@@ -46,8 +46,8 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description } = req.body;
-    const updatedGalaxy = await Galaxy.update({ name, size, description }, { where: { id } });
+    const { name, size, description, StarId} = req.body;
+    const updatedGalaxy = await Galaxy.update({ name, size, description, StarId }, { where: { id } });
     res.status(200).json(updatedGalaxy);
   } catch (error) {
     console.error(error);

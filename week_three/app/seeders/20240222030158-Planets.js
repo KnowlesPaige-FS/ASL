@@ -59,3 +59,5 @@ module.exports = {
     await queryInterface.bulkDelete('Planets', null, {});
   }
 };
+
+

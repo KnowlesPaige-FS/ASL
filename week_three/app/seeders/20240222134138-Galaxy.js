@@ -29,3 +29,4 @@ async down (queryInterface, Sequelize) {
   await queryInterface.bulkDelete('Galaxies', null, {});
 }
 };
+

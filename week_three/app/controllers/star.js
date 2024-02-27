@@ -1,10 +1,11 @@
-const { Star, Galaxy } = require('../models/index');
+const { Star, Galaxy, Planet } = require('../models/index');
 
 const index = async (req, res) => {
   try {
     const stars = await Star.findAll({
       include: [
-        { model: Galaxy }
+        { model: Galaxy },
+        { model: Planet }
       ]
     });
     res.status(200).json(stars);
@@ -46,8 +47,8 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description } = req.body;
-    const updatedStar = await Star.update({ name, size, description }, { where: { id } });
+    const { name, size, description, galaxyId, PlanetId } = req.body;
+    const updatedStar = await Star.update({ name, size, description, galaxyId, PlanetId }, { where: { id } });
     res.status(200).json(updatedStar);
   } catch (error) {
     console.error(error);
