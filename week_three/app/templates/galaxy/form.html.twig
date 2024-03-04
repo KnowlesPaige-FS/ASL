@@ -30,7 +30,7 @@
                 <select id="stars" name="stars" multiple>
                     {% for star in stars %}
                         <option value="{{ star.id }}"
-                        {% if galaxy is defined and galaxy.Stars is not empty and galaxy.Stars|filter(s => s.id == star.id)|length %}
+                        {% if galaxy is defined and galaxy.Stars is not empty and star in galaxy.Stars %}
                             selected
                         {% endif %}>
                         {{ star.name }}</option>

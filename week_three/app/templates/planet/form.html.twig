@@ -20,25 +20,17 @@
                 {% endif %}/>
             </div>
 
-            <div class="flex justify-content-between">
-                <label for="size">Size</label>
-                <input id="size" name="size" type="number"
-                {% if planet is defined %}
-                    value="{{ planet.size }}"
-                {% endif %}/>
-            </div>
-
             <div class="flex justify-content-between align-items-center">
                 <label for="description">Description</label>
                 <textarea id="description" name="description">{% if planet is defined %}{{ planet.description }}{% endif %}</textarea>
             </div>
 
-            <div class="flex justify-content-between align-items-center">
+           <div class="flex justify-content-between align-items-center">
                 <label for="stars">Belongs to Stars</label>
                 <select id="stars" name="stars" multiple>
                     {% for star in stars %}
                         <option value="{{ star.id }}"
-                        {% if planet is defined and planet.Stars|length and star.id in planet.Stars|map(attribute='id') %}
+                        {% if planet is defined and planet.Stars is not empty and star in planet.Stars %}
                             selected
                         {% endif %}>
                         {{ star.name }}</option>
