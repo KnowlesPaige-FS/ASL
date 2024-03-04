@@ -1,0 +1,14 @@
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <h1 class="text-center">Stars</h1>
+    <div class="flex flex-wrap">
+        {% for star in stars %}
+            <div class="card">
+                <h2>{{ star.name }}</h2>
+                <p>{{ star.description }}</p>
+                <a href="/stars/{{ star.id }}" class="btn">View Details</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock maincontent %}

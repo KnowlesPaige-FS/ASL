@@ -3,14 +3,12 @@ const { Galaxy, Star } = require('../models/index');
 const index = async (req, res) => {
   try {
     const galaxies = await Galaxy.findAll({
-      include: [
-        { model: Star }
-      ]
+      include: [{ model: Star }]
     });
-    res.status(200).json(galaxies);
+    res.render('galaxy/index.html.twig', { galaxies });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).render('error.html.twig', { error: 'Internal Server Error' });
   }
 };
 
@@ -18,24 +16,31 @@ const show = async (req, res) => {
   const { id } = req.params;
   try {
     const galaxy = await Galaxy.findByPk(id, {
-      include: [
-        { model: Star }
-      ]
+      include: [{ model: Star }]
     });
     if (!galaxy) {
-      return res.status(404).json({ error: 'Galaxy not found' });
+      return res.status(404).render('error.html.twig', { error: 'Galaxy not found' });
     }
-    res.status(200).json(galaxy);
+    res.render('galaxy/show.html.twig', { galaxy });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).render('error.html.twig', { error: 'Internal Server Error' });
   }
+};
+
+const form = async (req, res) => {
+  const { id } = req.params || -1;
+  let galaxy = null; // Initialize galaxy as null
+  if (id >= 0) {
+    galaxy = await Galaxy.findOne({ where: { id } });
+  }
+  res.render('galaxy/form.html.twig', { galaxy });
 };
 
 const create = async (req, res) => {
   try {
-    const { name, size, description} = req.body;
-    const galaxy = await Galaxy.create({ name, size, description});
+    const { name, size, description } = req.body;
+    const galaxy = await Galaxy.create({ name, size, description });
     res.status(200).json(galaxy);
   } catch (error) {
     console.error(error);
@@ -46,7 +51,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description, StarId} = req.body;
+    const { name, size, description, StarId } = req.body;
     const updatedGalaxy = await Galaxy.update({ name, size, description, StarId }, { where: { id } });
     res.status(200).json(updatedGalaxy);
   } catch (error) {
@@ -69,4 +74,6 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { index, show, create, update, remove };
+module.exports = { index, show, form, create, update, remove };
+
+

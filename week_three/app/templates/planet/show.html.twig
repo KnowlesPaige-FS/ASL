@@ -1,0 +1,24 @@
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <div class="card">
+        <h1>{{ planet.name }}</h1>
+        <p><strong>Description:</strong> {{ planet.description }}</p>
+        <p><strong>Size:</strong> {{ planet.size }}</p>
+        
+        {% if planet.Stars is defined and planet.Stars.length > 0 %}
+            <h3>
+                Belongs to Stars:
+                <ul>
+                    {% for star in planet.Stars %}
+                        <li>{{ star.name }}</li>
+                    {% endfor %}
+                </ul>
+            </h3>
+        {% else %}
+            <h3>Does not belong to any stars.</h3>
+        {% endif %}
+        
+        <a href="/planets/{{ planet.id }}/edit" class="btn">Edit</a>
+    </div>
+{% endblock maincontent %}

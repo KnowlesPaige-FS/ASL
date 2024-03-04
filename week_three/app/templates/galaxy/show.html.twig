@@ -1,0 +1,24 @@
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <div class="card">
+        <h1>{{ galaxy.name }}</h1>
+        <p><strong>Description:</strong> {{ galaxy.description }}</p>
+        
+        {% if galaxy.Stars is defined and galaxy.Stars.length > 0 %}
+            <h3>
+                Stars in Galaxy:
+                <ul>
+                    {% for star in galaxy.Stars %}
+                        <li>{{ star.name }}</li>
+                    {% endfor %}
+                </ul>
+            </h3>
+        {% else %}
+            <h3>No stars in this galaxy.</h3>
+        {% endif %}
+        
+        <a href="/galaxies/{{ galaxy.id }}/edit" class="btn">Edit</a>
+    </div>
+{% endblock maincontent %}
+

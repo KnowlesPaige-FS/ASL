@@ -8,7 +8,7 @@ const index = async (req, res) => {
         { model: Planet }
       ]
     });
-    res.status(200).json(stars);
+    res.status(200).render('star/index.html.twig', { stars });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -26,7 +26,16 @@ const show = async (req, res) => {
     if (!star) {
       return res.status(404).json({ error: 'Star not found' });
     }
-    res.status(200).json(star);
+    res.status(200).render('star/show.html.twig', { star });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const form = async (req, res) => {
+  try {
+    res.status(200).render('star/form.html.twig');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -37,7 +46,7 @@ const create = async (req, res) => {
   try {
     const { name, size, description } = req.body;
     const star = await Star.create({ name, size, description });
-    res.status(200).json(star);
+    res.status(200).render('star/show.html.twig', { star });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -49,7 +58,7 @@ const update = async (req, res) => {
   try {
     const { name, size, description, galaxyId, PlanetId } = req.body;
     const updatedStar = await Star.update({ name, size, description, galaxyId, PlanetId }, { where: { id } });
-    res.status(200).json(updatedStar);
+    res.status(200).render('star/show.html.twig', { star: updatedStar });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -70,4 +79,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { index, show, create, update, remove };
+module.exports = { index, show, form, create, update, remove };

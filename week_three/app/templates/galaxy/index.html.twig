@@ -1,0 +1,14 @@
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <h1 class="text-center">Galaxies</h1>
+    <div class="flex flex-wrap">
+        {% for galaxy in galaxies %}
+            <div class="card">
+                <h2>{{ galaxy.name }}</h2>
+                <p>{{ galaxy.description }}</p>
+                <a href="/galaxies/{{ galaxy.id }}" class="btn">View Details</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock maincontent %}

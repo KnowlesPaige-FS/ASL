@@ -1,0 +1,58 @@
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <h1 class="text-center">
+        {% if planet is defined %}
+            Edit
+        {% else %}
+            New
+        {% endif %}
+        Planet Form
+    </h1>
+    <form class="entry flex align-items-center justify-content-around" method="POST" enctype="multipart/form-data"
+        action="/planets{% if planet is defined %}/{{ planet.id }}{% endif %}">
+        <div class="flex-col justify-content-center">
+            <div class="flex justify-content-between">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text"
+                {% if planet is defined %}
+                    value="{{ planet.name }}"
+                {% endif %}/>
+            </div>
+
+            <div class="flex justify-content-between">
+                <label for="size">Size</label>
+                <input id="size" name="size" type="number"
+                {% if planet is defined %}
+                    value="{{ planet.size }}"
+                {% endif %}/>
+            </div>
+
+            <div class="flex justify-content-between align-items-center">
+                <label for="description">Description</label>
+                <textarea id="description" name="description">{% if planet is defined %}{{ planet.description }}{% endif %}</textarea>
+            </div>
+
+            <div class="flex justify-content-between align-items-center">
+                <label for="stars">Belongs to Stars</label>
+                <select id="stars" name="stars" multiple>
+                    {% for star in stars %}
+                        <option value="{{ star.id }}"
+                        {% if planet is defined and planet.Stars.some(s => s.id === star.id) %}
+                            selected
+                        {% endif %}>
+                        {{ star.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button class="align-self-center" type="submit">Submit</button>
+        </div>
+
+        <div>
+            <label for="image">Upload Image:</label>
+            <br/>
+            <input type="file" name="image" id="image" />
+        </div>
+    </form>
+{% endblock maincontent %}
