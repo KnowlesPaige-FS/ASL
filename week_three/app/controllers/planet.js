@@ -1,14 +1,15 @@
-const { Star, Galaxy, Planet } = require('../models/index');
+const { Planet, Star } = require('../models/index');
 
 const index = async (req, res) => {
   try {
-    const stars = await Star.findAll({
-      include: [
-        { model: Galaxy },
-        { model: Planet }
-      ]
+    const planets = await Planet.findAll({
+      include: [{ model: Star }]
     });
-    res.status(200).render('star/index.html.twig', { stars });
+    if (res.locals.asJson) {
+      res.status(200).json(planets);
+      return;
+    }
+    res.status(200).render('planet/index.html.twig', { planets });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -18,15 +19,20 @@ const index = async (req, res) => {
 const show = async (req, res) => {
   const { id } = req.params;
   try {
-    const star = await Star.findByPk(id, {
-      include: [
-        { model: Galaxy }
-      ]
+    const planet = await Planet.findByPk(id, {
+      include: [{ model: Star }]
     });
-    if (!star) {
-      return res.status(404).json({ error: 'Star not found' });
+    if (!planet) {
+      if (res.locals.asJson) {
+        return res.status(404).json({ error: 'Planet not found' });
+      }
+      return res.status(404).render('error.html.twig', { error: 'Planet not found' });
     }
-    res.status(200).render('star/show.html.twig', { star });
+    if (res.locals.asJson) {
+      res.status(200).json(planet);
+      return;
+    }
+    res.status(200).render('planet/show.html.twig', { planet });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -34,18 +40,29 @@ const show = async (req, res) => {
 };
 
 const form = async (req, res) => {
-  try {
-    res.status(200).render('planet/form.html.twig');
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  const { id } = req.params || -1;
+  let planet;
+  let selectedStarIds = [];
+  if (id >= 0) {
+    planet = await Planet.findOne({ where: { id }, include: [{ model: Star }] });
+    selectedStarIds = planet.Stars.map(star => star.id);
   }
+  const stars = await Star.findAll();
+  res.render('planet/form.html.twig', { planet, stars, selectedStarIds });
 };
+
 
 const create = async (req, res) => {
   try {
-    const { name, size, description } = req.body;
+    const { name, size, description, starIds } = req.body;
     const planet = await Planet.create({ name, size, description });
+
+    await planet.addStars(starIds);
+
+    if (res.locals.asJson) {
+      res.status(200).json(planet);
+      return;
+    }
     res.status(200).render('planet/show.html.twig', { planet });
   } catch (error) {
     console.error(error);
@@ -56,21 +73,33 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description } = req.body;
-    const updatedPlanet = await Planet.update({ name, size, description }, { where: { id } });
-    res.status(200).render('planet/show.html.twig', { planet: updatedPlanet });
+    const { name, size, description, starIds } = req.body;
+    await Planet.update({ name, size, description }, { where: { id } });
+    
+    const planet = await Planet.findByPk(id);
+    await planet.setStars(starIds);
+
+    if (res.locals.asJson) {
+      res.status(200).json({ success: true });
+      return;
+    }
+    res.status(200).render('planet/show.html.twig', { planet });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
+
 const remove = async (req, res) => {
   const { id } = req.params;
   try {
     const removedPlanetCount = await Planet.destroy({ where: { id } });
     if (removedPlanetCount === 0) {
-      return res.status(404).json({ error: 'Planet not found' });
+      if (res.locals.asJson) {
+        return res.status(404).json({ error: 'Planet not found' });
+      }
+      return res.status(404).render('error.html.twig', { error: 'Planet not found' });
     }
     res.status(200).json({ success: true });
   } catch (error) {
@@ -80,3 +109,4 @@ const remove = async (req, res) => {
 };
 
 module.exports = { index, show, form, create, update, remove };
+

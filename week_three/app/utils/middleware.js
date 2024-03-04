@@ -44,7 +44,6 @@ function uploadImage(req, res, next) {
         req.files.image.mv(uploadPath, async (err) => {
             if (err) {
                 console.error(err);
-                // Handle error, if any
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
             // Update the model with the new file extension uploaded

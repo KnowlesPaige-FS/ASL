@@ -8,6 +8,10 @@ const index = async (req, res) => {
         { model: Planet }
       ]
     });
+    if (res.locals.asJson) {
+      res.status(200).json(stars);
+      return;
+    }
     res.status(200).render('star/index.html.twig', { stars });
   } catch (error) {
     console.error(error);
@@ -24,7 +28,14 @@ const show = async (req, res) => {
       ]
     });
     if (!star) {
-      return res.status(404).json({ error: 'Star not found' });
+      if (res.locals.asJson) {
+        return res.status(404).json({ error: 'Star not found' });
+      }
+      return res.status(404).render('error.html.twig', { error: 'Star not found' });
+    }
+    if (res.locals.asJson) {
+      res.status(200).json(star);
+      return;
     }
     res.status(200).render('star/show.html.twig', { star });
   } catch (error) {
@@ -34,18 +45,23 @@ const show = async (req, res) => {
 };
 
 const form = async (req, res) => {
-  try {
-    res.status(200).render('star/form.html.twig');
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  const { id } = req.params || -1;
+  let star;
+  if (id >= 0) {
+    star = await Star.findOne({ where: { id } });
   }
+  const galaxies = await Galaxy.findAll();
+  res.render('star/form.html.twig', { star, galaxies });
 };
 
 const create = async (req, res) => {
   try {
-    const { name, size, description } = req.body;
-    const star = await Star.create({ name, size, description });
+    const { name, size, description, galaxyId } = req.body;
+    const star = await Star.create({ name, size, description, galaxyId });
+    if (res.locals.asJson) {
+      res.status(200).json(star);
+      return;
+    }
     res.status(200).render('star/show.html.twig', { star });
   } catch (error) {
     console.error(error);
@@ -56,9 +72,14 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description, galaxyId, PlanetId } = req.body;
-    const updatedStar = await Star.update({ name, size, description, galaxyId, PlanetId }, { where: { id } });
-    res.status(200).render('star/show.html.twig', { star: updatedStar });
+    const { name, size, description, galaxyId } = req.body;
+    const updatedStar = await Star.update({ name, size, description, galaxyId }, { where: { id } });
+    if (res.locals.asJson) {
+      res.status(200).json({ success: true });
+      return;
+    }
+    const star = await Star.findByPk(id);
+    res.status(200).render('star/show.html.twig', { star });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -70,7 +91,14 @@ const remove = async (req, res) => {
   try {
     const removedStarCount = await Star.destroy({ where: { id } });
     if (removedStarCount === 0) {
-      return res.status(404).json({ error: 'Star not found' });
+      if (res.locals.asJson) {
+        return res.status(404).json({ error: 'Star not found' });
+      }
+      return res.status(404).render('error.html.twig', { error: 'Star not found' });
+    }
+    if (res.locals.asJson) {
+      res.status(200).json({ success: true });
+      return;
     }
     res.status(200).json({ success: true });
   } catch (error) {

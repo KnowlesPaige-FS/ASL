@@ -25,18 +25,19 @@
                 <textarea id="description" name="description">{% if galaxy is defined %}{{ galaxy.description }}{% endif %}</textarea>
             </div>
 
-            <div class="flex justify-content-between align-items-center">
-                <label for="stars">Stars in Galaxy</label>
+           <div class="flex justify-content-between align-items-center">
+                <label for="stars">Belongs to Stars</label>
                 <select id="stars" name="stars" multiple>
                     {% for star in stars %}
                         <option value="{{ star.id }}"
-                        {% if galaxy is defined and galaxy.Stars.some(s => s.id === star.id) %}
+                        {% if galaxy is defined and galaxy.Stars is not empty and galaxy.Stars|filter(s => s.id == star.id)|length %}
                             selected
                         {% endif %}>
                         {{ star.name }}</option>
                     {% endfor %}
                 </select>
             </div>
+
 
             <button class="align-self-center" type="submit">Submit</button>
         </div>

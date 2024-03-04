@@ -38,13 +38,14 @@
                 <select id="stars" name="stars" multiple>
                     {% for star in stars %}
                         <option value="{{ star.id }}"
-                        {% if planet is defined and planet.Stars.some(s => s.id === star.id) %}
+                        {% if planet is defined and planet.Stars|length and star.id in planet.Stars|map(attribute='id') %}
                             selected
                         {% endif %}>
                         {{ star.name }}</option>
                     {% endfor %}
                 </select>
             </div>
+
 
             <button class="align-self-center" type="submit">Submit</button>
         </div>
