@@ -33,7 +33,7 @@ const routers = require('./routers/index.js');
 app.get('/', (req, res) => {
   res
     .status(200)
-    .render('layouts/_main.twig');
+    .render('views/default/home.html.twig');
 });
 
 // Register our RESTful routers with our "app"
