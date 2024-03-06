@@ -1,4 +1,4 @@
-{% extends 'layouts/_main.twig' %}
+{# {% extends 'layouts/_main.twig' %}
 
 {% block maincontent %}
     <h1 class="text-center">
@@ -9,10 +9,10 @@
         {% endif %}
         Star Form
     </h1>
-    <form class="entry flex align-items-center justify-content-around" method="POST" enctype="multipart/form-data"
+    <form class="entry flex" method="POST" enctype="multipart/form-data"
         action="/stars{% if star is defined %}/{{ star.id }}{% endif %}">
         <div class="flex-col justify-content-center">
-            <div class="flex justify-content-between">
+            <div class="input">
                 <label for="name">Name</label>
                 <input id="name" name="name" type="text"
                 {% if star is defined %}
@@ -20,7 +20,7 @@
                 {% endif %}/>
             </div>
 
-            <div class="flex justify-content-between">
+            <div class="input">
                 <label for="size">Size</label>
                 <input id="size" name="size" type="number"
                 {% if star is defined %}
@@ -28,7 +28,7 @@
                 {% endif %}/>
             </div>
 
-            <div class="flex justify-content-between align-items-center">
+            <div class="input">
                 <label for="description">Description</label>
                 <textarea id="description" name="description">{% if star is defined %}{{ star.description }}{% endif %}</textarea>
             </div>
@@ -40,10 +40,26 @@
                         <option value="">No Galaxy</option>
                         {% for galaxy in galaxies %}
                             <option value="{{ galaxy.id }}"
-                            {% if star is defined and star.galaxy.id == galaxy.id %}
+                            {% if star is defined and star.galaxyId == galaxy.id %}
                                 selected
                             {% endif %}>
                             {{ galaxy.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            
+            {% if planet is defined and planet.length > 0 %}
+                <div class="input">
+                    <label for="planetIds">Belongs to Planets</label>
+                    <select id="planetIds" name="planetIds[]" multiple>
+                        {% for planet in planets %}
+                            <option value="{{ planet.id }}"
+                                {% if star is defined and star.Planet is not empty and star in star.Planet %}
+                                    selected
+                                {% endif %}>
+                                {{ planet.name }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -57,7 +73,86 @@
             <br/>
             <input type="file" name="image" id="image" />
         </div>
+    </form>
+{% endblock maincontent %} #}
 
+
+
+{% extends 'layouts/_main.twig' %}
+
+{% block maincontent %}
+    <h1 class="text-center">
+        {% if star is defined %}
+            Edit
+        {% else %}
+            New
+        {% endif %}
+        Star Form
+    </h1>
+    <form class="entry flex" method="POST" enctype="multipart/form-data"
+          action="/stars{% if star is defined %}/{{ star.id }}{% endif %}">
+        <div class="flex-col justify-content-center">
+            <div class="input">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text"
+                       {% if star is defined %}
+                           value="{{ star.name }}"
+                       {% endif %}/>
+            </div>
+
+            <div class="input">
+                <label for="size">Size</label>
+                <input id="size" name="size" type="number"
+                       {% if star is defined %}
+                           value="{{ star.size }}"
+                       {% endif %}/>
+            </div>
+
+            <div class="input">
+                <label for="description">Description</label>
+                <textarea id="description" name="description">{% if star is defined %}{{ star.description }}{% endif %}</textarea>
+            </div>
+            
+            {% if galaxies is defined and galaxies|length > 0 %}
+                <div class="flex justify-content-between align-items-center">
+                    <label for="galaxyId">Belongs to Galaxy</label>
+                    <select id="galaxyId" name="galaxyId">
+                        <option value="">No Galaxy</option>
+                        {% for galaxy in galaxies %}
+                            <option value="{{ galaxy.id }}"
+                                {% if star is defined and star.galaxyId == galaxy.id %}
+                                    selected
+                                {% endif %}>
+                                {{ galaxy.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            
+            {% if planets is defined and planets|length > 0 %}
+                <div class="input">
+                    <label for="planetIds">Belongs to Planets</label>
+                    <select id="planetIds" name="planetIds[]" multiple>
+                        {% for planet in planets %}
+                            <option value="{{ planet.id }}"
+                                {% if star is defined and star.Planet is not empty and planet in star.Planet %}
+                                    selected
+                                {% endif %}>
+                                {{ planet.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+
+            <button class="align-self-center" type="submit">Submit</button>
+        </div>
+
+        <div>
+            <label for="image">Upload Image:</label>
+            <br/>
+            <input type="file" name="image" id="image" />
+        </div>
     </form>
 {% endblock maincontent %}
-

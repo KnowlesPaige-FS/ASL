@@ -18,12 +18,12 @@ function uploadImage(req, res, next) {
     let id;
     let model;
 
-    if (req.planetId) {
-        id = req.planetId;
+    if (req.PlanetId) {
+        id = req.PlanetId;
         uploadPath += `planets/images/%s%s`;
         model = Planet;
-    } else if (req.starId) {
-        id = req.starId;
+    } else if (req.StarId) {
+        id = req.StarId;
         uploadPath += `stars/images/%s%s`;
         model = Star;
     } else if (req.galaxyId) {
@@ -62,4 +62,3 @@ module.exports = {
     checkAcceptHeader,
     uploadImage
 };
-

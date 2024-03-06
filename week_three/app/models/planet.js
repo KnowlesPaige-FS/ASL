@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
   Planet.init({
     name: DataTypes.STRING,
     size: DataTypes.INTEGER,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    extension: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Planet',
   });
   return Planet;
 };
-

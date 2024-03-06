@@ -1,6 +1,7 @@
 'use strict';
-const { Model } = require('sequelize');
-
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class StarsPlanets extends Model {
     static associate(models) {
@@ -11,8 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   StarsPlanets.init({
     StarId: DataTypes.INTEGER,
     PlanetId: DataTypes.INTEGER
-  },
-  {
+  }, {
     sequelize,
     modelName: 'StarsPlanets',
   });

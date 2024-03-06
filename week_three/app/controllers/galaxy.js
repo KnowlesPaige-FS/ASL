@@ -52,11 +52,7 @@ const create = async (req, res) => {
   try {
     const { name, size, description } = req.body;
     const galaxy = await Galaxy.create({ name, size, description });
-    if (res.locals.asJson) {
-      res.status(200).json(galaxy);
-      return;
-    }
-    res.status(200).render('galaxy/show.html.twig', { galaxy });
+    res.redirect('/galaxies');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -67,13 +63,8 @@ const update = async (req, res) => {
   const { id } = req.params;
   try {
     const { name, size, description } = req.body;
-    const updatedGalaxy = await Galaxy.update({ name, size, description }, { where: { id } });
-    if (res.locals.asJson) {
-      res.status(200).json({ success: true });
-      return;
-    }
-    const galaxy = await Galaxy.findByPk(id);
-    res.status(200).render('galaxy/show.html.twig', { galaxy });
+    await Galaxy.update({ name, size, description }, { where: { id } });
+    res.redirect('/galaxies');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -90,7 +81,9 @@ const remove = async (req, res) => {
       }
       return res.status(404).render('error.html.twig', { error: 'Galaxy not found' });
     }
-    res.status(200).json({ success: true });
+    res
+    .redirect('/galaxies')
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -98,3 +91,4 @@ const remove = async (req, res) => {
 };
 
 module.exports = { index, show, form, create, update, remove };
+

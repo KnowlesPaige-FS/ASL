@@ -2,6 +2,9 @@
 
 {% block maincontent %}
     <h1 class="text-center">Stars</h1>
+    <a href="/stars/create">
+            <button type="button">Add New Star</button>
+        </a>
     <div class="flex flex-wrap">
         {% for star in stars %}
             <div class="card">

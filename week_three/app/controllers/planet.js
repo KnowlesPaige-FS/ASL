@@ -51,19 +51,16 @@ const form = async (req, res) => {
   res.render('planet/form.html.twig', { planet, stars, selectedStarIds });
 };
 
-
 const create = async (req, res) => {
   try {
-    const { name, size, description, starIds } = req.body;
+    const { name, size, description, StarId } = req.body;
     const planet = await Planet.create({ name, size, description });
 
-    await planet.addStars(starIds);
+    // Associate the planet with a star
+    await planet.setStars(StarId);
 
-    if (res.locals.asJson) {
-      res.status(200).json(planet);
-      return;
-    }
-    res.status(200).render('planet/show.html.twig', { planet });
+    // Redirect to the index page
+    res.redirect('/planets');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -73,23 +70,20 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, size, description, starIds } = req.body;
+    const { name, size, description, StarId } = req.body;
     await Planet.update({ name, size, description }, { where: { id } });
     
+    // Associate the planet with a star
     const planet = await Planet.findByPk(id);
-    await planet.setStars(starIds);
+    await planet.setStars(StarId);
 
-    if (res.locals.asJson) {
-      res.status(200).json({ success: true });
-      return;
-    }
-    res.status(200).render('planet/show.html.twig', { planet });
+    // Redirect to the index page
+    res.redirect('/planets');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 
 const remove = async (req, res) => {
   const { id } = req.params;
@@ -101,12 +95,17 @@ const remove = async (req, res) => {
       }
       return res.status(404).render('error.html.twig', { error: 'Planet not found' });
     }
-    res.status(200).json({ success: true });
+    if (res.locals.asJson) {
+      res.status(200).json({ success: true });
+      return;
+    }
+    res.redirect('/planets'); 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 module.exports = { index, show, form, create, update, remove };
 

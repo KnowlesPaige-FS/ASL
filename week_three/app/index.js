@@ -1,15 +1,18 @@
-
 // Load in our Express framework
 const express = require(`express`);
 const Twig = require('twig');
+
 // Create a new Express instance called "app"
 const app = express();
+
+app.use(express.static('public'));
 
 Twig.extend((Twig) => {
   // Enable async extensions
   Twig.exports.extendAsync = true;
 });
 app.engine('twig', require('twig').renderFile);
+
 // Configure twig template engine
 app.set('view engine', 'twig');
 app.set('views', `${__dirname}/templates`);

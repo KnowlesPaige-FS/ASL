@@ -2,6 +2,9 @@
 
 {% block maincontent %}
     <h1 class="text-center">Galaxies</h1>
+        <a href="/galaxies/create">
+            <button type="button">Add New Galaxy</button>
+        </a>
     <div class="flex flex-wrap">
         {% for galaxy in galaxies %}
             <div class="card">

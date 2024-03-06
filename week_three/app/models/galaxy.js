@@ -18,11 +18,17 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     size: DataTypes.INTEGER,
     description: DataTypes.TEXT,
-    StarId: DataTypes.INTEGER
+    starId:  {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Star", 
+        key: "id"
+      }
+    },
+    extension: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Galaxy',
   });
   return Galaxy;
 };
-

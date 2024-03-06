@@ -2,6 +2,9 @@
 
 {% block maincontent %}
     <h1 class="text-center">Planets</h1>
+    <a href="/planets/create">
+        <button type="button">Add New Planet</button>
+    </a>
     <div class="flex flex-wrap">
         {% for planet in planets %}
             <div class="card">

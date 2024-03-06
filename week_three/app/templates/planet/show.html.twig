@@ -18,7 +18,16 @@
         {% else %}
             <h3>Does not belong to any stars.</h3>
         {% endif %}
-        
-        <a href="/planets/{{ planet.id }}/edit" class="btn">Edit</a>
+
+        <div>
+            {% if planet.extension is not null and planet.extension != "" %}
+                <img src="/uploads/planets/images/{{ planet.id }}{{ planet.extension }}"/>
+            {% endif %}
+        </div>
+
+        <div class="btns">
+            <a href="/planets/{{ planet.id }}/edit" class="btn">Edit</a>
+            <a href="/planets/{{ planet.id }}/delete" class="btn">Delete</a>
+        </div> 
     </div>
 {% endblock maincontent %}

@@ -12,11 +12,11 @@
             <p>Does not belong to any galaxy.</p>
         {% endif %}
         
-        {% if star.Planets is defined and star.Planets.length > 0 %}
+        {% if star.Planet is defined and star.Planet|length > 0 %}
             <h3>
                 Planets belonging to Star:
                 <ul>
-                    {% for planet in star.Planets %}
+                    {% for planet in star.Planet %}
                         <li>{{ planet.name }}</li>
                     {% endfor %}
                 </ul>
@@ -24,7 +24,17 @@
         {% else %}
             <h3>No planets belong to this star.</h3>
         {% endif %}
+
+         <div>
+            {% if star.extension is not null and star.extension != "" %}
+                <img src="/uploads/stars/images/{{ star.id }}{{ star.extension }}"/>
+            {% endif %}
+        </div>
+
+        <div class="btns">
+            <a href="/stars/{{ star.id }}/edit" class="btn">Edit</a>
+            <a href="/stars/{{star.id}}/delete" class="btn">Delete</a>
+        <div> 
         
-        <a href="/stars/{{ star.id }}/edit" class="btn">Edit</a>
     </div>
 {% endblock maincontent %}

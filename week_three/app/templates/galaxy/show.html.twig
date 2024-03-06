@@ -17,8 +17,18 @@
         {% else %}
             <h3>No stars in this galaxy.</h3>
         {% endif %}
-        
-        <a href="/galaxies/{{ galaxy.id }}/edit" class="btn">Edit</a>
-    </div>
-{% endblock maincontent %}
 
+        <div>
+            {% if galaxy.extension is not null and galaxy.extension != "" %}
+                <img src="/uploads/galaxies/images/{{ galaxy.id }}{{ galaxy.extension }}"/>
+            {% endif %}
+        </div>
+
+
+        <div class="btns">
+        <a href="/galaxies/{{ galaxy.id }}/edit" class="btn">Edit</a>
+        <a href="/galaxies/{{galaxy.id}}/delete" class="btn">Delete</a>
+        <div>
+    </div>
+
+{% endblock maincontent %}

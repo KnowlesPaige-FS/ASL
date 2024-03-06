@@ -9,10 +9,10 @@
         {% endif %}
         Galaxy Form
     </h1>
-    <form class="entry flex align-items-center justify-content-around" method="POST" enctype="multipart/form-data"
-        action="/galaxies{% if galaxy is defined %}/{{ galaxy.id }}{% endif %}">
+    <form class="entry" method="POST" enctype="multipart/form-data" action="/galaxies{% if galaxy and galaxy.id is defined %}/{{ galaxy.id|trim }}{% endif %}">
+
         <div class="flex-col justify-content-center">
-            <div class="flex justify-content-between">
+            <div class="input">
                 <label for="name">Name</label>
                 <input id="name" name="name" type="text"
                 {% if galaxy is defined %}
@@ -20,24 +20,18 @@
                 {% endif %}/>
             </div>
 
-            <div class="flex justify-content-between align-items-center">
+            <div class="input">
+                <label for="size">Size</label>
+                <input id="size" name="size" type="number"
+                {% if galaxy is defined %}
+                    value="{{ galaxy.size }}"
+                {% endif %}/>
+            </div>
+
+            <div class="input">
                 <label for="description">Description</label>
-                <textarea id="description" name="description">{% if galaxy is defined %}{{ galaxy.description }}{% endif %}</textarea>
+                <textarea class="textarea" id="description" name="description">{% if galaxy is defined %}{{ galaxy.description }}{% endif %}</textarea>
             </div>
-
-           <div class="flex justify-content-between align-items-center">
-                <label for="stars">Belongs to Stars</label>
-                <select id="stars" name="stars" multiple>
-                    {% for star in stars %}
-                        <option value="{{ star.id }}"
-                        {% if galaxy is defined and galaxy.Stars is not empty and star in galaxy.Stars %}
-                            selected
-                        {% endif %}>
-                        {{ star.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
 
             <button class="align-self-center" type="submit">Submit</button>
         </div>
